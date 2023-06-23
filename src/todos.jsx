@@ -21,6 +21,10 @@ export default function Todos(){
     }
   }
 
+  const updateTodo = (id, updatedTitle) => {
+    setTodos(todos.map(todo => todo.id === id ? {...todo, title: updatedTitle} : todo))
+  }
+
   const deleteTodo = (todoToDelete) => {
     setTodos(todos.filter(todo => todo.id !== todoToDelete.id))
   }
@@ -28,15 +32,15 @@ export default function Todos(){
   return (
     <>
       <Todoinput newTodo={newTodo} setNewTodo={setNewTodo} handleSubmit={handleSubmit}/>
-      <Todolist todos={todos} deleteTodo={deleteTodo}/>
+      <Todolist todos={todos} updateTodo={updateTodo} deleteTodo={deleteTodo}/>
     </>
   )
 }
 
-function Todolist({todos, deleteTodo}){
+function Todolist({todos, updateTodo, deleteTodo}){
   return (
     <ol>
-      {todos.map(todo => <Todoline key={todo.id} todo={todo} deleteTodo={deleteTodo}/>)}
+      {todos.map(todo => <Todoline key={todo.id} todo={todo} updateTodo={updateTodo} deleteTodo={deleteTodo}/>)}
     </ol>
   )
 }
@@ -56,10 +60,43 @@ function Todoinput({newTodo, setNewTodo, handleSubmit}) {
   )
 }
 
-function Todoline({todo, deleteTodo}) {
+function Todoline({todo, updateTodo, deleteTodo}) {
+  const [isEditing, setIsEditing] = useState(false)
+  const [editTodo, setEditTodo] = useState(todo.title)
+
+  const handleKeyDown = (e) => {
+    if (e.key == "Enter") {
+      handleBlur()
+    }
+  }
+  
+  const handleDoubleClick = () => {
+    setIsEditing(true)
+  }
+
+  const handleBlur = () => {
+    updateTodo(todo.id, editTodo)
+    setIsEditing(false)
+  }
+
+  const handleChange = (e) => {
+    setEditTodo(e.target.value)
+  }
+
   return (
     <li key={todo.id}>
-      {todo.title}
+      {isEditing ? (
+        <input 
+          type="text"
+          value={editTodo}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          autoFocus
+        />
+      ) : (
+        <span onDoubleClick={handleDoubleClick}>{todo.title}</span>
+      )}
       <button onClick={() => deleteTodo(todo)}>-</button>
     </li>
   )
