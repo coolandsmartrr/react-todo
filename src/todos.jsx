@@ -11,11 +11,14 @@ export default function Todos(){
   const [newTodo, setNewTodo] = useState("")
   const [nextId, setNextId] = useState(4)
 
-  const handleClick = () => {
-    const newTodoEntry = {title: newTodo, id: nextId}
-    setTodos([...todos, newTodoEntry])
-    setNewTodo("")
-    setNextId(nextId + 1)
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (newTodo.trim() !== '') {
+      const newTodoEntry = {title: newTodo, id: nextId}
+      setTodos([...todos, newTodoEntry])
+      setNewTodo("")
+      setNextId(nextId + 1)
+    }
   }
 
   const deleteTodo = (todoToDelete) => {
@@ -24,7 +27,7 @@ export default function Todos(){
   
   return (
     <>
-      <Todoinput newTodo={newTodo} setNewTodo={setNewTodo} handleClick={handleClick}/>
+      <Todoinput newTodo={newTodo} setNewTodo={setNewTodo} handleSubmit={handleSubmit}/>
       <ol>
         {todos.map(todo => <Todoline key={todo.id} todo={todo} deleteTodo={deleteTodo}/>)}
       </ol>
@@ -32,10 +35,9 @@ export default function Todos(){
   )
 }
 
-function Todoinput({newTodo, setNewTodo, handleClick}) {
+function Todoinput({newTodo, setNewTodo, handleSubmit}) {
   return (
-    <>
-      <form action=""></form>
+    <form onSubmit={handleSubmit}>
       <input 
         type="text"
         value={newTodo}
@@ -43,8 +45,8 @@ function Todoinput({newTodo, setNewTodo, handleClick}) {
           e => setNewTodo(e.target.value)
         }
       />
-      <button onClick={handleClick}>Submit</button>
-    </>
+      <button type='submit'>Submit</button>
+    </form>
   )
 }
 
