@@ -40,3 +40,12 @@
 .read-the-docs {
   color: #888;
 }
+
+button {
+  margin-left: 1rem;
+}
+
+.todoline {
+  display: flex;
+  justify-content: space-between;
+}

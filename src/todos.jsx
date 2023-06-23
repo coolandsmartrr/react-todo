@@ -16,6 +16,11 @@ export default function Todos(){
     setNewTodo("")
   }
 
+  const deleteTodo = (todoforremoval) => {
+    console.log("Deleting: " + todoforremoval.title)
+    setTodos(todos.filter(todo => todo.id !== todoforremoval.id))
+  }
+
   return (
     <>
       <input 
@@ -27,7 +32,11 @@ export default function Todos(){
       />
       <button onClick={handleClick}>Submit</button>
       <ol>
-        {todos.map(todo => <li key={todo.id}>{todo.title}</li>)}
+        {todos.map(todo =>
+           <div class="todoline">
+            <li key={todo.id}>{todo.title}</li>
+            <button key={todo.id+`_del`} onClick={() => deleteTodo(todo)}>-</button>
+          </div>)}
       </ol>
     </>
   )
