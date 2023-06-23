@@ -9,20 +9,33 @@ export default function Todos(){
   
   const [todos, setTodos] = useState(defaultTodos)  
   const [newTodo, setNewTodo] = useState("")
+  const [nextId, setNextId] = useState(4)
 
   const handleClick = () => {
-    const newTodoEntry = {title: newTodo, id: todos.length + 1}
+    const newTodoEntry = {title: newTodo, id: nextId}
     setTodos([...todos, newTodoEntry])
     setNewTodo("")
+    setNextId(nextId + 1)
   }
 
-  const deleteTodo = (todoforremoval) => {
-    console.log("Deleting: " + todoforremoval.title)
-    setTodos(todos.filter(todo => todo.id !== todoforremoval.id))
+  const deleteTodo = (todoToDelete) => {
+    setTodos(todos.filter(todo => todo.id !== todoToDelete.id))
   }
-
+  
   return (
     <>
+      <Todoinput newTodo={newTodo} setNewTodo={setNewTodo} handleClick={handleClick}/>
+      <ol>
+        {todos.map(todo => <Todoline key={todo.id} todo={todo} deleteTodo={deleteTodo}/>)}
+      </ol>
+    </>
+  )
+}
+
+function Todoinput({newTodo, setNewTodo, handleClick}) {
+  return (
+    <>
+      <form action=""></form>
       <input 
         type="text"
         value={newTodo}
@@ -31,14 +44,15 @@ export default function Todos(){
         }
       />
       <button onClick={handleClick}>Submit</button>
-      <ol>
-        {todos.map(todo =>
-           <div class="todoline">
-            <li key={todo.id}>{todo.title}</li>
-            <button key={todo.id+`_del`} onClick={() => deleteTodo(todo)}>-</button>
-          </div>)}
-      </ol>
     </>
   )
 }
 
+function Todoline({todo, deleteTodo}) {
+  return (
+    <li key={todo.id}>
+      {todo.title}
+      <button onClick={() => deleteTodo(todo)}>-</button>
+    </li>
+  )
+}
