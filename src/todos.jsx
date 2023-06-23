@@ -28,10 +28,16 @@ export default function Todos(){
   return (
     <>
       <Todoinput newTodo={newTodo} setNewTodo={setNewTodo} handleSubmit={handleSubmit}/>
-      <ol>
-        {todos.map(todo => <Todoline key={todo.id} todo={todo} deleteTodo={deleteTodo}/>)}
-      </ol>
+      <Todolist todos={todos} deleteTodo={deleteTodo}/>
     </>
+  )
+}
+
+function Todolist({todos, deleteTodo}){
+  return (
+    <ol>
+      {todos.map(todo => <Todoline key={todo.id} todo={todo} deleteTodo={deleteTodo}/>)}
+    </ol>
   )
 }
 
